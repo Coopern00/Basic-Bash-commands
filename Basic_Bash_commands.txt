@@ -1,0 +1,477 @@
+!Bash Shell Commands help page!
+- man bash (Lists all the bash commands)
+
+
+Descriptions of commands
+- man CommandName
+
+
+Arguments or Flags 			(you can find all the arguments that you can use for different commands "man CommandName")
+- command -a	(all)
+- command -r	(reverse or recursive)
+- command -t	(time, from newest to oldest)
+- command -tr	(time-reversed, from oldest to newest)
+- command -h	(show human friendly, readable)
+- command -f	(formatting)
+- command -u	(specify what user do we want to see)
+- command -fu username (formatted by username)
+- command -e	(everything)
+- command -ef	(everything formatted)
+- command -p	(pretty format)
+- command -l	(long format, displays more info)
+- command -i	(if you want to be asked at a file deletion that, do you really want to delete it?)
+- command -f	(forcing it)
+- command -p	(parent directory, make any parent directory necessary)
+
+
+Wildcards
+ 1. * 			(everything or zero or more characters)
+	ls -d * 	(list every directory)
+	ls -d D*	(it specifies that the directories name has to start with a "D" letter and the rest of the letters doesn't matter, you can do this multiple ways like De* and ect)
+
+ 2. ?			(one and only one charater)
+	ls -d dat?	(list those directories which only has one letter after "dat")
+
+ 3. Character class 	(example we want a charater with "?" but we do care what character it is)
+	ls m[aeiou]*	(it will list those which starts with an "m" and the following letter can be either of those letters BUT only out of those letters, and after that it doesn't matter)
+	ls m[a-l]*	(same as the top but specifying that the range has to be from "a" to "l"]
+	ls m[^a-l]*	(^ is the negate[not] character in this case, give me all the files which second letter is not through "a" to "l")
+
+ [examples]
+	ls *r		(name has to end with "r")
+	ls *s*		(all files that has "s" anywhere the name, we don't care whats before the "s" and we don't care what's after the "s")
+	ls *[aeiou] [aeiou]* 	(doesn't matter what is starts with but the 2nd and 3rd letter has to be from the [] and after it doesn't matter)
+	ls ????		(the characters don't matter only that the file has to be 4 letters)
+	ls ??[ln]*	(the 3rd character has to be either an "l" or an "n" and the rest doesn't matter)
+
+
+   <Important to note that if by any strange reason a file is named like that you can use '' to make the shell not interpet it    ls 'm[^aeiou]*' >
+
+Deleting a file
+- rm FileName
+<If you want to be asked if you really want to delete it>
+- rm -i FileName
+<Delete everything in the directory>
+- rm *							(if you want to be asked rm -i *)
+<Delete everything in the directory without beign asked>
+- rm -f *
+
+
+Create a Directory
+- mkdir DirectoryName
+- mkdir DirectoryName/subdir 				(creating sub-directories) [relative path]
+- mkdir /home/user/DirectoryName/subdir/level3 		[absolute path]
+<If you want to create a Directory with Sub-Directories using the realative path>
+- mkdir -p DirectoryName/subdir/level3			(-p means create any necessary parent directories)
+
+
+Remove a Directory
+- rmdir DirectoryName 			(this only works with emtpy directories meaning no files and no sub-directories)
+- rmdir DirectoryName/subdir/level3	(deleting a directory which has one or multiple sub-directories)
+<A shorter way to do this>
+- rm -r DirectoryName			(it recursively deletes all sub-directories along with the parent directory) 
+
+
+Date & Time
+- date
+- date +%Y (year)
+- date +%D (m/d/y)
+
+
+Directory Structure
+- tree
+
+
+Show the Directory you're currently in
+- pwd 
+
+
+Change Directory
+- cd \DirectoryName
+- cd ~ 			(returning to the home directory) 
+- cd 			(returning to the home directory)
+- cd .. 		(parent directory = up one level)
+- cd ./DirectoryName 	(It's not useful for cd but for other commands, what it means : start at the current directory than go to "DirectoryName")
+
+
+Listing of files in Home directory
+- ls
+- ls -a 		(listing ALL the files)
+- ls -r 		(listing files in reversed order)
+- ls -t 		(from newest to oldest)
+- ls -tr OR ls -t -r 	(from newest to oldest)
+<more options for listing>
+- ls -l			(listing all files with long format)
+  [column explanation]
+	1. What kind of a file it is
+ 		d (directory)
+		l (softlink)
+		- (regular file)
+	[The rest of the line is permissions]
+		- r  (read & access permission)
+		- w  (write permission)
+		- x  (execute permission)
+		- rw (read & access & write permission)
+		- rwx (read & access & write & execute permissiom)
+		- xr (execute & read & access permissiom)
+		- You need both read and execute permission if you want to run a script
+
+	<It is important to note that it shows permission for USER[owner of the files]--MEMBERS OF THE GROUP--EVERYONE ELSE>
+	<Premissions are stored in what is called a "mode", it's 12-bits of data that is associated with every file, fully define all the permissions> 
+	[example FILE premissions]
+		- rw-rw-rw- 	(USER has read & write permissions | MEMBERS OF THE GROUP have read & write permissions | EVERYONE ELSE has read & write permissions)			[everyone]
+		- rw-r-----	(USER has read & write permissions | MEMBERS OF THE GROUP have read permissions | EVERYONE ELSE has no permissions)					[group-look-only]
+		- rw-------	(USER has read & write permissions | MEMBERS OF THE GROUP have no permissions | EVERYONE ELSE has no permissions)					[justme]
+		- rw-r--r--	(USER has read & write permissions | MEMBERS OF THE GROUP have read permission | EVERYONE ELSE has read permissions)					[look-only]
+		- rw-rw----	(USER has read & write permissions | MEMBERS OF THE GROUP have read & write permissions | EVERYONE ELSE has no permissions)				[mygroup]
+		- rwxr-xr-x	(USER has read & write & execute permissions | MEMBERS OF THE GROUP have read & execute permissions | EVERYONE ELSE has read & execute permissions)	[x-by-all]
+		- rwxr-x---	(USER has read & write & execute permissions | MEMBERS OF THE GROUP have read & execute permissions | EVERYONE ELSE has no permissions)			[x-by-group]
+		- rwx------	(USER is the only one who can read & write & execute)													[x-just-me]
+
+	[example DIRECTORY premissions]
+		- drwx--x--x	(ROOT has read & write & execute permissions | USER has execute permission)			[execute-only]
+		- drwxr-xr-x	(ROOT has read & write & execute permissions | USER has read & write & execute permissions) 	[normal-directory]
+		- drwxr-xr-x	(ROOT has read & write & execute permissions | USER has read & execute permissions)		[read-execute]
+		- drwxr--r--	(ROOT has read & write & execute permissions | USER has read permission)			[read-only]
+		- drwxrw-rw-	(ROOT has read & write & execute permissions | USER has read & write permissions)		[read-write-only]
+	<Important to note that even if you have read permission for a directory, you would still need execute permission to even cat a file in that directory, also you need execute permission for ALL the directories in the path>
+	<Also important that if there would be a file inside "normal-directory" with only ROOT having acess to it(rw-------), since USER has every permission for that "normal-directory" USER is able to delete that file>
+
+	2. Link count
+	3. File owner
+	4. Group (members of the group)
+	5. File size in bytes (to get sizes in human friendly format ls -lh)
+	6. Modification time
+	7. Directory or File name
+- ls -R			(provides a recursive listing showing all the subdirectories)
+- ls -ld 		(shows the listing of the specific directory itself)
+
+
+Sudo Permission
+<administrative user in Linux = Root>
+- sudo CommandName 	(do something as the superuser [root])
+<It will ask for the USER password NOT the Root password, by default it wont ask for the password again for 15 minutes>
+
+Previously we talked about the "mode" which is 12-bits of data, 3 sets of 3 permissions
+<The 3 extra bits that are in the "mode">
+
+[On Linux your password is stored in an encrypted form in a file /ect/shadow , only Root can make changes to your password]
+ 1. Set UID 					(when anyone runs the password command, they will take actions with the effective User ID, they will have permissions of the owner of the file)
+	ls -l /usr/bin/passwd
+	- rwsr-xr-x 				(the "s" is the Set UID bit in this permission and this gives the User Root permission to change password)
+
+ 2. Set GID 					(effective permissions of the group, when a directory is Set GID ALL new files created in the directory will have the same group assignment as the directory)
+	ls -l /usr/bin/wall 			(the wall command is a way to write to everybodies terminal session)
+	- rwxr-sr-x 				(the "s" is the Set GID bit in this permission and it sets the effective permissions of the Group are used for when that particular program is running)
+
+ 3. Sticky bit 					(it only lets the OWNER of the file to delete a files)
+	ls -l /tmp
+	- drwxrwxrwt			(here everybody has read & write & execute permissions for this directory but the "t" means everyone can make files in the directory BUT ONLY the OWNER of a file is able to delete that file)
+
+
+Changing permissions for FILES & DIRECTORIES
+- chmod 		(this is short for "change mode")
+<There is two different syntax for this> 
+	1. chmod ugo 				("u" for the User , "g" for the Group , "o" for the Others) 
+	
+	   chmod ugo+w FileName(or DirectoryName)	(gives write permission to User-Group-Others for this file)
+	   chmod go-rw FileName(or DirectoryName)	(removes read & write permissions from Group-Others for this file)
+
+	2. Octal numbers			(you can use the octal numbers 0-7 to define the permissions)
+		000 = --- = 0	[nothing set]
+		001 = --x = 1	[execute]
+		010 = -w- = 2	[write]
+		011 = -wx = 3	[write & execute]
+		100 = r-- = 4	[read]
+		101 = r-x = 5	[read & execute]
+		110 = rw- = 6	[read & write]
+		111 = rwx = 7	[read & write & execute]
+		<0 - 4 - 5 - 6 - 7 are the most commonly used>
+
+	   chmod 640		(the User permissions to be 6 , the Group permissions to be 4 , the Others permissions to be 0)
+		<Important to note that the permission to "set the permission" is not taken away from the Owner of the file, so the Owner cannot lock itself out>  
+
+
+Changing GROUP for FILES & DIRECTORIES
+- id 							(lists all the groups the owner of the file or directory is a member of)
+- chgrp							(this is short for change group)
+- chgrp GroupName FileName(or DirectoryName)		(here you change the group of the file/directory , GroupName are the names show in () listed with the "id" command)				 
+
+
+Changing the OWNER for FILES & DIRECTORIES
+- chowm 						(this is short for change owner)
+  <Important to note that only the Root has the ability to change the owner of a file / directory so this is why you have to use "sudo">
+- sudo chowm OwnerName FileName(or DirectoryName)
+
+					 
+
+Write to everybodies terminal session
+- wall
+- ctrl+d to leave once you finished the text
+
+
+Search for things in a file
+- grep string
+
+
+User & Groups
+- grep string(in this case User) /etc/passwd 	(you can see the line for User in passwd information in columns each separated by :)
+	[User - column explanation]
+		1. Account name
+		2. "x" is where the encrpyted password used to go, but now It's just a placeholder
+		3. User ID number 	(when a file is created it will be associated with this UID)
+		4. Group ID 		(this is the primary group that the User is a member of)
+		5. User full name 	(,,, in this case potential information is not defined about the user) 
+		6. Home directory
+		7. Shell of the User	(when any user logs in the system looks at this last column and runs that program)
+		7.1 Or cat /etc/passwd
+			- /bin/false
+			- /usr/sbin/nologin	(both of these mean that theres a way to make an account that can own files, run processes but can't be used to log on)
+- cat /etc/group
+	[Group - column explanation]
+		1. Name of the group
+		2. Password field "x"
+		3. Group ID
+		4. Optional ":" separated list of users who belong in that group
+
+
+Managing Users
+*Adding Users 		<!This is for Debian based Linux, on Red Hat based Linux useradd & adduser are synonyms to one another!>
+- sudo useradd UserName 	(imporant to note that with this command you actually have to create password+home directory + ect manually with arguments)
+- sudo adduser Username		(with this command it will automatically ask for home directory password ect, so this is the recommended easier to use command)
+
+*Modifying Users
+- sudo usermod Argument(s) WhateverYouWantToChange UserName		(important to note that you have to use arguements here to change the specific things)
+
+*Deleting Users
+- sudo userdel UserName
+
+*Changing User Password
+- sudo passwd UserName
+
+
+Managing Groups
+*Creating a group
+- sudo groupadd GroupName
+
+*Adding Users to Group
+- sudo usermod -G GroupName UserName
+
+*Deleting a group
+- sudo groupdel GroupName
+
+
+Customizing the PATH of an application
+*Where to find a certain command
+- tpye command
+	<when you first use a command it actually looks for it in the $PATH directories but after that bash is going to remember the location and that's what hashed means [hasing algorithm]>
+
+*Environment variables
+- env		(these set the variables for the shell)
+- echo $PATH	(in this $PATH means that "look in these directories for the commands")
+	<Important to note that enviroment variables gets passed into other shells which means they are "global variables">
+
+*Adding a directory in the PATH
+<common thing to do is to put a bin directory under your home directory>
+- PATH="$PATH:/home/user/bin"		($PATH is a short for the whole string [echo $PATH],  "" tells the shell to gather thing together as one argument)
+
+
+
+Setting a Debug level on the shell
+- 1. set -x
+  2. command 	(the shell is going to show everything that it is doing before it executes)
+
+
+Concatenate [Display contents chained]
+- cat example.txt
+- cat example.txt exampletwo.txt 
+
+
+Showing lines of the file
+- head example.txt 	(shows the first 10 lines of the file)
+- head -5 example.txt 	(shows the first 5 lines of the file)
+- head -5 exaple.txt exampletwo.txt
+- tail example.txt 	(shows the last 10 lines of the file)
+- tail -5 example.txt 	(shows the last 5 lines of the file)
+
+
+Showing the contents of the file without GUI 
+- less example.txt  [press h to bring out help, q to quit]
+  [navigation]
+    space	(forward)
+    b     	(back)
+    return 	(go down one line)
+    q 		(quit)
+- less example.txt exampletwo.txt [to navigate to the next file use :n]
+
+
+How much disk space you have Allocated and how much are you Using
+- df
+- df -h 	(show it in GB)
+
+
+Shows the Uptime of the system
+- uptime
+
+
+Shows the Hostname
+- hostname
+
+
+Shows what type of UNIX/Linux you are running
+- uname
+- uname -a 	(shows a more detailed "about")
+
+
+Shows what Processes are running
+- ps
+- ps -f
+  [column explanation]
+	UID 	(User ID)
+	PID 	(Process ID, integer for the process)
+	PPID 	(Parent Process ID, this is the integer for the process which started this process) 
+	C 	(how much of the CPU is being used)
+	STIME 	(what time did the process start)
+	TTY	(teletype terminal)
+	TIME	(total amount of CPU time the process taken)
+	CMD	(what the command was) 
+
+- ps -fu username
+- ps -ef (shows all the processes formatted)
+- ps aux (roughly equivalent of ps -ef) It's from Cali Berkleys UNIX
+  [column explanation]
+	USER
+	PID	(Process ID)
+	%CPU	(% of CPU taken by the process)
+	%MEM	(% of Memory taken by the process)
+	VSZ	(Virtual memory size, how much memory it thinks it is using)
+	RSS	(Resident set size, how much memory is it actually using)
+	TTY	(teletype terminal)
+	STAT	(current status of the process) [S -sleeping R -running]
+	START	()
+	TIME	(total amount of CPU time the process taken)
+	COMMAND	(what the command was)
+
+
+Constantly updating system sescources
+- top
+
+Terminal System Rescources [advanced top]
+<You have to install this>
+- htop
+
+
+Run a script
+- ./ScriptName.sh
+<If it gives a "Perminission denied" than type the command under before trying to run a script>
+- chmod +x ScriptName.sh
+<If you want to use the terminal while the script runs else it just makes you wait and queues up the commands you use after>
+- ./ScriptName.sh & 	(gives back the terminal while the script runs in the background)
+<To spice it up if you want to see all the jobs running after running the scripts>
+- jobs
+<If a job needs an input from you>
+- fg %[job number]	(foreground)
+
+
+Terminate a job
+- 1.	./ScriptName &
+  2.	jobs 			(with the jobs displaying you can see that before each jobs ID theres [job number]
+  3.	kill %jobnumber 	(here you can use use %1 for example to kill job [1])
+
+
+Interrupt the current process that is going on
+- ctrl+c
+
+
+Show all the jobs that are running
+- jobs
+
+
+Killing a Process
+- kill **** 	(enter process id)
+<It is possible to encounter a scenario when a parent process does not kill a child process it becomes a "zombie" process>
+- kill ---- 	(enter the parent process id here) [the id with <defunct> tag is not the droid you are looking for]
+
+
+To update Modification time (Timestamp) of files
+- touch FileName
+<you can also create files that does not exist, it is useful for testing permissions to see if the user has acess to the specific directory>
+- touch NewFileName
+
+
+Linking files [Hardlinks & Softlinks(Sybmbolic-link)]
+<You have to use softlink if you want to make a link to a directory>
+- ln -s OriginalFile shortcut 		(softlink, this is a different chunk of data from the OriginalFile pointing to the Original chunck)
+<You can only make a hardlink to a file & you can only make a hardlink between two file names that exist in the same file system(drive/partition)>
+- ln Original Original2 		(hardlink, this is the same chuck of data of the OriginalFile but with a different name)
+
+
+Pipes and Pipelines
+<It is important to note that you can use different commands AND arguments when creating a "pipelined command", best to "man" for command arguments>
+- command data Examplefile | command -argument, -argument | command | command 		(this is just as an example how to "pipe" commands and arguments, a pipe is represented by the "|")
+- grep Data Example.csv | cut -d, -f1 | sort | less 					(this is combining four commands togather with optional arguments)
+- grep -v Yankees Example.csv | cut -d, -f1 | sort | uniq -c | sort -n | less
+
+
+Redirect standart output
+- grep data Example.csv | cut -d, f1 | sort | uniq -c | sort -nr >example.txt		(">" if the file does not exist create it, if it does exist wipe out all of it's contents and than write all the output to this file)
+- grep data Exanoke.csv | cut -d, f1 | sort | uniq -c | sort -nr >>example.txt		(">>" append , if the file does not exist create it, if it does and has data just stick this to the end of the file)
+
+	Standard in is always file 0 
+	Standard out is always file 1
+	Standard error is always file 2
+
+- grep data >Example.txt 2>Example.err			(you can use the 2> to output a possible error message to an .err file) 
+- grep data * 2>/dev/null				(* = in all the files, this is for hiding an error /dev/null, whatever goes in here it will be thrown away 
+- grep data * >Example.txt 2>&1				(2>&1 means send file descriptor 2[error] to the same place as file descriptor 1[out], send both error and output to the same .txt file)
+<Order does matter here>
+- grep data * 2>&1 >piazza.txt				(look for data in the all files, send standard error where standard out is going[the terminal] and than send standard out to .txt file, so the error will be just on the terminal) 
+
+
+Redirect standard input
+- grep data <Example.csv				(this is functionally equivalent of   cat Example.csv | grep data )
+
+
+Asking for non-duplicate data
+- uniq		(no redundant data)
+
+
+Customizing commands with "Aliases" & deleting them
+<an "Alias" is something you type in place of something else>
+- alias 			(to see Aliases that are already defined)
+*Creating an Alias
+- alias lsr="ls -lR --color=auto"	(recursive listing with color in a long format)
+
+<Important to note that if an Alias masks another command than the Alias than the Alias will be used>
+ [example]
+	alias ps=ls		(now when you type the "ps" command it will actually use the "ls" command AND infact using the Alies for the ls command [ls --color=auto])
+
+*Removing an Alias
+- unalias ps			(it will remove the ls from the ps from the previous example)
+
+
+Customizing the Prompt
+- echo $PS1					(this is the default prompt setting, in the string \u is my username, \h is my hostname , \w is my working directory)
+- PS1="You can write whatever you want here "
+- PS1='\u@\h \w $ '				(this is same as the default prompt but without colors)
+- exit						(to go back to the default prompt)
+<to make your custimized prompt permanent heres an explanation of the "login" shell and "non-login">
+ If you logged in at a text console or a remote login via SSH 		-> Login shell
+ Anything else including the terminals that we start from the GUI 	-> Non-login shell
+Bash Startup Files
+			Login shell		Interactive, Non-login shell
+	System file	/etc/profile		/etc/bash.bashrc	(You can make a bash.bashrc file to make your customizations there)
+						(This is the default prompt with the pre-set aliases and ect)
+	User file	~/.bash_profile		
+			~/.bash_login
+			~/.profile
+			(If its a login shell than it will look for home directory in the /etc/profile than look for these 3 files)
+- vi .bashrc		(you can use any text editor instead of vi)
+	1. prompt - PS1='Whatever you want to put here'
+	2. path   - PATH="$PATH:/home/username/bin"
+	3. aliases - alias CustomAliasName='Custom alias with optional arguements'
+
+
+Cowsay
+- sudo apt install cowsay
+- cowsay "whatever"
